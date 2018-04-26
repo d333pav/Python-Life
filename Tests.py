@@ -2,60 +2,58 @@ import unittest
 import Life_Game
 
 
-def life_test(num=1):
-    test_file = open('tests/test'+str(num)+'.txt', 'r')
-    lines_number = 0
-    columns_number = 0
-    turns_number = 0
-    i = True
+def life_test(name=''):
+    test_file = open('tests/test_'+name+'.txt', 'r')
+    first_line = True
+    info_list = []
     ocean_array = []
     for line in test_file:
-        if i:  # считываем основные данные только из первой строки
-            i = False
-            input_list = line.split()
-            lines_number = int(input_list[0])
-            columns_number = int(input_list[1])
-            turns_number = int(input_list[2])
+        if first_line:  # считываем основные информацию только из первой строки
+            first_line = False
+            info_list = list(map(int, line.strip().split()))
         else:
             line = line.replace('\n', '')
             ocean_array.append(list(line))
     test_file.close()
-    ocean_array = Life_Game.life(lines_number, columns_number, turns_number, ocean_array)
+    ocean_array = Life_Game.life(info_list, ocean_array)
     return ocean_array
 
 
-def fread_ans(num=1):
-    f = open('tests/test' + str(num) + '_ans.txt', 'r')
-    a = []
-    for line in f:
+def fread_ans(name=''):
+    test_file = open('tests/test_' + name + '_ans.txt', 'r')
+    ocean_array = []
+    for line in test_file:
         line = line.replace('\n', '')
-        a.append(list(line))
-    f.close()
-    return a
+        ocean_array.append(list(line))
+    test_file.close()
+    return ocean_array
 
 
 class TestOcean(unittest.TestCase):
-    def test1(self):
-        test_ocean = life_test(1)
-        expect_ocean = fread_ans(1)
+    def test_simple(self):
+        name = 'simple'
+        test_ocean = life_test(name)
+        expect_ocean = fread_ans(name)
         self.assertEqual(test_ocean, expect_ocean)
 
-    def test2(self):
-        test_ocean = life_test(2)
-        expect_ocean = fread_ans(2)
+    def test_order(self):
+        name = 'order'
+        test_ocean = life_test(name)
+        expect_ocean = fread_ans(name)
         self.assertEqual(test_ocean, expect_ocean)
 
-    def test3(self):
-        test_ocean = life_test(3)
-        expect_ocean = fread_ans(3)
+    def test_big(self):
+        name = 'big'
+        test_ocean = life_test(name)
+        expect_ocean = fread_ans(name)
         self.assertEqual(test_ocean, expect_ocean)
 
-    def test4(self):
-        test_ocean = life_test(4)
-        expect_ocean = fread_ans(4)
+    def test_iterations(self):
+        name = 'iterations'
+        test_ocean = life_test(name)
+        expect_ocean = fread_ans(name)
         self.assertEqual(test_ocean, expect_ocean)
 
 
 if __name__ == '__main__':
     unittest.main()
-    n = input()

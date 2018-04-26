@@ -1,3 +1,6 @@
+from collections import OrderedDict
+
+
 class Fish:
     nei_count = 0  # количество соседей
 
@@ -21,37 +24,34 @@ class Shrimp(Fish):
     pass
 
 
-def life(lines_number=0, columns_number=0, turns_number=0, ocean_array=[]):
-    for i in range(turns_number):
-        new_ocean = [['n'] * columns_number for i in range(lines_number)]
+def life(info_list=[0, 0, 0], ocean_array=[]):
+    lines_number = info_list[0]  # количество строк в океане
+    columns_number = info_list[1]  # количество столбцов
+    turns_number = info_list[2]  # количество раз обновления океана
+    for turn in range(turns_number):
+        new_ocean = [['n'] * columns_number for line in range(lines_number)]
         for x in range(lines_number):
             for y in range(columns_number):
                 if ocean_array[x][y] == 'r':
                     new_ocean[x][y] = 'r'
                 else:
-                    dict_fishes = {
-                        's': Shrimp(),
-                        'f': Fish()
-                    }
-                    for j1 in range(-1, 2):
-                        for j2 in range(-1, 2):
-                            if (j1 != 0 or j2 != 0) and lines_number > x + j1 > -1 and columns_number > y + j2 > -1\
-                                    and ocean_array[x + j1][y + j2] != 'n' and ocean_array[x + j1][y + j2] != 'r':
-                                dict_fishes[ocean_array[x + j1][y + j2]].add_nei()
-                    for s in dict_fishes:
-                        if ocean_array[x][y] == s and dict_fishes[s].stay_alive():
-                            new_ocean[x][y] = s
-                        if ocean_array[x][y] == 'n' and dict_fishes[s].new_fish():
-                            new_ocean[x][y] = s
-                    '''
-                    if a[x][y] == 's' and dict_fishes['s'].stay_alive():
-                        b[x][y] = 's'
-                    if a[x][y] == 'f' and dict_fishes['f'].stay_alive():
-                        b[x][y] = 'f'
-                    if a[x][y] == 'n' and dict_fishes['s'].new_fish():
-                        b[x][y] = 's'
-                    if a[x][y] == 'n' and dict_fishes['f'].new_fish():
-                        b[x][y] = 'f'
-                    '''
+                    dict_fish = OrderedDict()
+                    dict_fish['s'] = Shrimp()
+                    dict_fish['f'] = Fish()
+                    for nei_x in range(x-1, x+2):
+                        for nei_y in range(y-1, y+2):
+                            if (nei_x != x or nei_y != y)\
+                                    and lines_number > nei_x > -1\
+                                    and columns_number > nei_y > -1\
+                                    and ocean_array[nei_x][nei_y] != 'n'\
+                                    and ocean_array[nei_x][nei_y] != 'r':
+                                dict_fish[ocean_array[nei_x][nei_y]].add_nei()
+                    if ocean_array[x][y] == 'n':
+                        for fish in dict_fish:
+                            if dict_fish[fish].new_fish():
+                                new_ocean[x][y] = fish
+                    else:
+                        if dict_fish[ocean_array[x][y]].stay_alive():
+                            new_ocean[x][y] = ocean_array[x][y]
         ocean_array = new_ocean
     return ocean_array
