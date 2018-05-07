@@ -55,23 +55,19 @@ def life(info_list=[0, 0, 0], ocean_array=[]):
                 sub_finder(sub)
     sub_finder(Animal)
     for turn in range(turns_number):
-        new_ocean = [['n'] * columns_number for line in range(lines_number)]
+        new_ocean = copy.deepcopy(ocean_array)
         for x in range(lines_number):
             for y in range(columns_number):
-                if ocean_array[x][y] == 'r':
-                    new_ocean[x][y] = 'r'
-                else:
-                    current_dict = copy.deepcopy(dict_fish)
-                    for nei_x in range(x-1, x+2):
-                        for nei_y in range(y-1, y+2):
-                            if (nei_x != x or nei_y != y)\
-                                    and lines_number > nei_x > -1\
-                                    and columns_number > nei_y > -1\
-                                    and ocean_array[nei_x][nei_y] != 'n'\
-                                    and ocean_array[nei_x][nei_y] != 'r':
-                                current_dict[ocean_array[nei_x][nei_y]].\
-                                    add_nei()
-
+                current_dict = copy.deepcopy(dict_fish)
+                for nei_x in range(x - 1, x + 2):
+                    for nei_y in range(y - 1, y + 2):
+                        if (nei_x != x or nei_y != y) \
+                                and lines_number > nei_x > -1 \
+                                and columns_number > nei_y > -1 \
+                                and ocean_array[nei_x][nei_y] != 'n' \
+                                and ocean_array[nei_x][nei_y] != 'r':
+                            current_dict[ocean_array[nei_x][nei_y]]. \
+                                add_nei()
                     for fish in current_dict:
                         new_element = current_dict[fish].\
                             action(ocean_array[x][y], new_ocean[x][y])
