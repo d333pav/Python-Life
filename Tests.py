@@ -2,19 +2,16 @@ import unittest
 import Life_Game
 
 
-def life_test(test=''):
-    el_num = 0  # номер элемента
-    info_list = []
+def life_test(info_list=[], test=''):
     ocean_array = []
     for element in test.split():
-        if el_num < 3:  # считываем основные информацию только
-            # из первых трех элементов
-            info_list.append(int(element))
-            el_num += 1
-        else:
-            ocean_array.append(list(element))
+        ocean_array.append(list(element))
     ocean_array = Life_Game.life(info_list, ocean_array)
-    return ocean_array
+    answer = ''
+    for line_num in range(info_list[0]):
+        answer += ' ' + ''.join(ocean_array[line_num])
+    answer = answer[1:]
+    return answer
 
 
 def read_ans(ans):
@@ -25,27 +22,17 @@ def read_ans(ans):
 
 
 class TestOcean(unittest.TestCase):
-    def test_simple(self):
-        test = '3 3 1 nff fff fff'
-        ans = 'fnf nnn fnf'
-        test_ocean = life_test(test)
-        expect_ocean = read_ans(ans)
-        self.assertEqual(test_ocean, expect_ocean)
+    def test_fish(self):
+        self.assertEqual(life_test([3, 3, 1], 'nff fff fff'), 'fnf nnn fnf')
+
+    def test_shrimp(self):
+        self.assertEqual(life_test([3, 3, 1], 'ssn nnn sss'), 'nnn nns nsn')
 
     def test_order(self):
-        test = '3 3 1 fff nnn sss'
-        ans = 'nfn nfn nsn'
-        test_ocean = life_test(test)
-        expect_ocean = read_ans(ans)
-        self.assertEqual(test_ocean, expect_ocean)
+        self.assertEqual(life_test([3, 3, 1], 'fff nnn sss'), 'nfn nfn nsn')
 
-    def test_rocks(self):
-        test = '3 3 1 rnr srf rnr'
-        ans = 'rnr nrn rnr'
-        test_ocean = life_test(test)
-        expect_ocean = read_ans(ans)
-        self.assertEqual(test_ocean, expect_ocean)
-
+    def test_rock(self):
+        self.assertEqual(life_test([3, 3, 1], 'rrr nrn rrr'), 'rrr nrn rrr')
 
 if __name__ == '__main__':
     unittest.main()
