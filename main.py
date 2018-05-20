@@ -13,16 +13,20 @@ def calculate_ocean(input_path, output_path):
             print('Неверный путь к файлу')
             sys.exit(1)
     info_list = list(map(int, stdin().strip().split()))
+    lines_number = info_list[0]
+    columns_number = info_list[1]
+    turns_number = info_list[2]
     # массив с данными о размере океана и количестве итераций
     ocean_array = []  # массив с информацией об океане
-    for line_num in range(info_list[0]):
+    for line_num in range(lines_number):
         ocean_array.append(list(stdin().replace('\n', '')))
     if input_path:
         input_file.close()
-    ocean_array = Life_Game.life(info_list, ocean_array)
+    ocean_array = Life_Game.life(lines_number, columns_number,
+                                 turns_number, ocean_array)
     if output_path:
         output_file = open(output_path, 'w')
-        for line_num in range(info_list[0]):
+        for line_num in range(lines_number):
             output_file.write(''.join(ocean_array[line_num])+'\n')
         output_file.close()
     else:
