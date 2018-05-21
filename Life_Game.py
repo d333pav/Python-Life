@@ -8,22 +8,6 @@ class Animal:
     def get_nei(self):
         return self.nei_dict
 
-    def add_nei(self):
-        pass
-
-    def stay_alive(self):
-        pass
-
-    def new_fish(self):
-        pass
-
-    def action(self, cur_elem='n', new_elem='n'):
-        pass
-
-
-class Fish(Animal):
-    symbol = 'f'
-
     def stay_alive(self):  # условия для продолжения жизни
         if self.nei_dict[self.symbol] == 2 or self.nei_dict[self.symbol] == 3:
             return self.symbol
@@ -35,6 +19,13 @@ class Fish(Animal):
             return self.symbol
         else:
             return 'n'
+
+    def action(self, cur_elem='n', new_elem='n'):
+        pass
+
+
+class Fish(Animal):
+    symbol = 'f'
 
     def action(self, cur_element='n', new_element='n'):
         # производим действие основываясь на текущем элементе в океане
@@ -45,29 +36,19 @@ class Fish(Animal):
             return self.new_fish()
         elif cur_element == self.symbol:
             return self.stay_alive()
-
+        else:
+            return new_element
 
 class Shrimp(Animal):
     symbol = 's'
-
-    def stay_alive(self):  # условия для продолжения жизни
-        if self.nei_dict[self.symbol] == 2 or self.nei_dict[self.symbol] == 3:
-            return self.symbol
-        else:
-            return 'n'
-
-    def new_fish(self):  # условие появления новой рыбы
-        if self.nei_dict[self.symbol] == 3:
-            return self.symbol
-        else:
-            return 'n'
 
     def action(self, cur_elem='n', new_elem='n'):
         if cur_elem == 'n' and new_elem == 'n':
             return self.new_fish()
         elif cur_elem == self.symbol:
             return self.stay_alive()
-
+        else:
+            return new_elem
 
 class Rock(Animal):
     symbol = 'r'
@@ -121,10 +102,8 @@ def life(lines_number=0, columns_number=0, turns_number=0, ocean_array=[]):
                                           ocean_array, x, y)
                 if ocean_array[x][y] == 'n':
                     for fish in current_dict:
-                        new_element = current_dict[fish]. \
+                        new_ocean[x][y] = current_dict[fish]. \
                             action(ocean_array[x][y], new_ocean[x][y])
-                        if new_element:
-                            new_ocean[x][y] = new_element
                 else:
                     new_ocean[x][y] = current_dict[ocean_array[x][y]]. \
                         stay_alive()
